@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.concurrent.*;
 
 public class JuegoRuleta {
     private List<Jugador> jugadores;
@@ -41,111 +40,112 @@ public class JuegoRuleta {
 
         jugar();
     }
-     public void jugar() {
+
+    public void jugar() {
     Scanner scanner = new Scanner(System.in);
-    ExecutorService executor = Executors.newSingleThreadExecutor();
 
     while (true) {
         List<Apuesta> apuestas = new ArrayList<>();
 
-        for (int i = 0; i < jugadores.size(); i++) {
-            Jugador jugador = jugadores.get(i);
+        // Fase de apuestas: todos los jugadores hacen sus apuestas
+        for (Jugador jugador : jugadores) {
+           // Dentro del bucle de jugadores en el método jugar()
             System.out.println("Turno de " + jugador.getNombre() + ". Saldo: $" + jugador.getSaldo());
 
-            Future<Apuesta> future = executor.submit(new Callable<Apuesta>() {
-                @Override
-                public Apuesta call() throws Exception {
-                        // Obtener la apuesta del jugador
-                        System.out.print("Ingresa tu apuesta: $");
-                        double monto = scanner.nextDouble();
+            double monto;
+                do {
+                System.out.print("Ingresa el monto de tu apuesta: $");
+             monto = scanner.nextDouble();
+            if (monto > jugador.getSaldo()) {
+              System.out.println("No puedes apostar más dinero del que tienes. Tu saldo es: $" + jugador.getSaldo());
+             }
+            } while (monto > jugador.getSaldo());
 
-                        // Asegurarse de que la apuesta no exceda el saldo
-                        while (monto > jugador.getSaldo()) {
-                            System.out.println("No puedes apostar más dinero del que tienes. Tu saldo es: $" + jugador.getSaldo());
-                            System.out.print("Ingresa tu apuesta: $");
-                            monto = scanner.nextDouble();
-                        }
+                          System.out.print("¿Qué tipo de apuesta deseas hacer (numero/color/falta/pasa/docena)? ");
+        String tipoApuesta = scanner.next();
+        Apuesta apuesta = null;
 
-                        System.out.print("¿Quieres apostar por color, número o docena (color/numero/docena)? ");
-                        String tipoApuesta = scanner.next();
-                        Apuesta apuesta = null;
-                        
-                        switch (tipoApuesta.toLowerCase()) {
-                            case "color":
-                                System.out.print("¿A qué color deseas apostar (rojo/negro/verde)? ");
-                                String color = scanner.next();
-                                apuesta = new ApuestaPorColor(monto, color);
-                                break;
-                            case "numero":
-                                System.out.print("¿A qué número deseas apostar (0-36)? ");
-                                int numero = scanner.nextInt();
-                                apuesta = new ApuestaPorNumero(monto, numero);
-                                break;
-                            case "docena":
-                                System.out.print("¿A qué docena deseas apostar (1/2/3)? ");
-                                int docena = scanner.nextInt();
-                                apuesta = new ApuestaPorDocena(monto, docena);
-                                break;
-                        }
-                        return apuesta;
-                    }
-                });
+                    
+                    
+                    
+                    
+                switch (tipoApuesta.toLowerCase()) {
+    case "color":
+        System.out.print("¿A qué color deseas apostar (rojo/negro/verde)? ");
+        String color = scanner.next();
+        apuesta = new ApuestaPorColor(monto, color);
+        break;
+    case "numero":
+        System.out.print("¿A qué número deseas apostar (0-36)? ");
+        int numero = scanner.nextInt();
+        apuesta = new ApuestaPorNumero(monto, numero);
+        break;
+    case "docena":
+        System.out.print("¿A qué docena deseas apostar (1/2/3)? ");
+        int docena = scanner.nextInt();
+        apuesta = new ApuestaPorDocena(monto, docena);
+        break;
+        
+          case "falta":
+                apuesta = new ApuestaFalta(monto);
+                break;
 
-                try {
-                Apuesta apuesta = future.get(30, TimeUnit.SECONDS);
+            case "pasa":
+                apuesta = new ApuestaPasa(monto);
+                break;
+}
+
+// Añade la apuesta a la lista de apuestas
                 apuestas.add(apuesta);
-            } catch (TimeoutException e) {
-                System.out.println(jugador.getNombre() + " no apostó a tiempo.");
-                if (i == jugadores.size() - 1) {
-                    System.out.println("No hay más jugadores. El juego ha terminado.");
-                    executor.shutdown();
-                    return; // Termina el juego si no hay más jugadores
-                } else {
-                    System.out.println("Pasando al siguiente jugador.");
-                    continue; // Pasa al siguiente jugador si el jugador actual no apostó a tiempo
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
+
         }
 
-            // Girar la ruleta y verificar apuestas
-Casilla resultado = ruleta.girar();
-System.out.println("La ruleta ha caído en: " + resultado);
+        // Fase de giro de la ruleta
+        Casilla resultado = ruleta.girar();
+        System.out.println("La ruleta ha caído en: " + resultado);
 
+        // Fase de resolución de apuestas
 for (int i = 0; i < jugadores.size(); i++) {
     Jugador jugador = jugadores.get(i);
     Apuesta apuesta = apuestas.get(i);
+    double monto = apuesta.getMonto(); // Obtener el monto de la apuesta
 
     if (apuesta.esGanadora(resultado)) {
-        double montoGanado = apuesta.getMonto() * 2; // Ajusta la ganancia según las reglas de tu juego
-        System.out.println(jugador.getNombre() + " ha ganado! Ganaste: $" + montoGanado);
-        jugador.ganarApuesta(montoGanado);
+        double ganancia = monto;
+
+        if (apuesta instanceof ApuestaPorNumero) {
+            ganancia = monto * 36;
+        } else if (apuesta instanceof ApuestaPorColor) {
+            ganancia = monto * 2;
+        } else if (apuesta instanceof ApuestaPorDocena) {
+            ganancia = monto * 3;
+        }
+
+        System.out.println(jugador.getNombre() + " ha ganado! Ganaste: $" + ganancia);
+        jugador.ganarApuesta(ganancia);
     } else {
-        System.out.println(jugador.getNombre() + " ha perdido. Perdiste: $" + apuesta.getMonto());
-        jugador.perderApuesta(apuesta.getMonto());
+        System.out.println(jugador.getNombre() + " ha perdido. Perdiste: $" + monto);
+        jugador.perderApuesta(monto);
     }
 }
 
 
-      System.out.print("¿Quieres jugar otra vez (si/no)? ");
+        // Pregunta a los jugadores si quieren jugar otra ronda
+        System.out.print("¿Quieres jugar otra vez (si/no)? ");
         String decision = scanner.next();
         if (decision.equalsIgnoreCase("no")) {
             break;
         }
     }
 
-    executor.shutdown();
-    mostrarEstadisticas(); // Mostrar estadísticas al final del juego
-}
-
-private void mostrarEstadisticas() {
-    // Mostrar estadísticas para cada jugador
+    // Mostrar estadísticas para cada jugador al final del juego
     for (Jugador jugador : jugadores) {
         jugador.mostrarEstadisticas();
     }
 }
-    
+
+
+
     public static void main(String[] args) {
         JuegoRuleta juego = new JuegoRuleta();
         juego.iniciarJuego();
