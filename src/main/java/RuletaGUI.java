@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
 
 public class RuletaGUI extends JFrame {
     private Ruleta ruleta;
@@ -14,17 +16,18 @@ public class RuletaGUI extends JFrame {
     private JComboBox<String> colorApuestaComboBox;
     private JLabel saldoLabel;
     private JLabel resultadoLabel;
-    private JLabel casillaSalidaLabel; // Nueva etiqueta para mostrar la casilla
+    private JLabel casillaSalidaLabel;
 
     public RuletaGUI() {
         ruleta = new Ruleta();
-        jugador = new Jugador("Nombre del Jugador", 25, 1000.0);
+        jugador = new Jugador("Jugador de prueba", 20, 1000.0);
 
         setTitle("Ruleta Casino");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         initializeComponents();
+        setupInputValidations();
 
         pack();
         setLocationRelativeTo(null);
@@ -42,7 +45,7 @@ public class RuletaGUI extends JFrame {
         tipoApuestaComboBox.addItem("Apuesta Por Número");
         tipoApuestaComboBox.addItem("Apuesta Por Color");
         tipoApuestaComboBox.addItem("Apuesta Por Docena");
-        tipoApuestaComboBox.addItem("Apuesta Faltas");
+        tipoApuestaComboBox.addItem("Apuesta Falta");
         tipoApuestaComboBox.addItem("Apuesta Pasa");
 
         tipoApuestaComboBox.addActionListener(new ActionListener() {
@@ -79,6 +82,12 @@ public class RuletaGUI extends JFrame {
                 if (montoApuestaStr.isEmpty()) {
                     camposValidos = false;
                     JOptionPane.showMessageDialog(null, "Ingrese el monto de la apuesta", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    double montoApuesta = Double.parseDouble(montoApuestaStr);
+                    if (montoApuesta > jugador.getSaldo()) {
+                        camposValidos = false;
+                        JOptionPane.showMessageDialog(null, "El monto de la apuesta no puede ser mayor que el saldo", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
 
                 // Verificar campos adicionales según el tipo de apuesta
@@ -128,16 +137,48 @@ public class RuletaGUI extends JFrame {
         colorApuestaComboBox.addItem("Negro");
         colorApuestaComboBox.setEnabled(false);
 
-        JPanel panel = new JPanel();
+        JLabel montoLabel = new JLabel("Monto:");
+        JLabel tipoApuestaLabel = new JLabel("Tipo de Apuesta:");
+        JLabel numeroApuestaLabel = new JLabel("Número/Docena:");
+        JLabel colorApuestaLabel = new JLabel("Color:");
+
+        JPanel panel = new JPanel(new GridLayout(5, 2));
+        panel.add(tipoApuestaLabel);
         panel.add(tipoApuestaComboBox);
-        panel.add(numeroApuestaField);
-        panel.add(colorApuestaComboBox);
+        panel.add(montoLabel);
         panel.add(montoApuestaField);
+        panel.add(numeroApuestaLabel);
+        panel.add(numeroApuestaField);
+        panel.add(colorApuestaLabel);
+        panel.add(colorApuestaComboBox);
         panel.add(girarButton);
+
         add(panel, BorderLayout.NORTH);
         add(saldoLabel, BorderLayout.WEST);
         add(resultadoLabel, BorderLayout.EAST);
-        add(casillaSalidaLabel, BorderLayout.SOUTH); // Agregar la etiqueta de la casilla de salida en la parte inferior
+        add(casillaSalidaLabel, BorderLayout.SOUTH);
+    }
+
+    private void setupInputValidations() {
+        // Validación para el campo de monto
+        montoApuestaField.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE) || (c == KeyEvent.VK_PERIOD))) {
+                    e.consume();
+                }
+            }
+        });
+
+        // Validación para el campo de número
+        numeroApuestaField.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+                    e.consume();
+                }
+            }
+        });
     }
 
     private boolean jugadorRealizaApuesta(String tipoApuesta, double monto, Casilla resultado) {
