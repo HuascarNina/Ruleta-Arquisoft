@@ -54,5 +54,21 @@ public class Jugador {
         System.out.println("Porcentaje de partidas ganadas: " + porcentajeGanadas + "%");
         System.out.println("Porcentaje de partidas perdidas: " + porcentajePerdidas + "%");
     }
+
+    public double getGananciasTotales() {
+         return gananciasTotales;
+    }
+
+    public String getPorcentajePartidasGanadas() {
+        int totalPartidas = partidasGanadas + partidasPerdidas;
+        double resultado = (double) partidasGanadas / totalPartidas * 100;
+         return String.format("%.2f", resultado);
+    }
+
+    public String getPorcentajePartidasPerdidas() {
+        int totalPartidas = partidasGanadas + partidasPerdidas;
+        double resultado = (double) partidasPerdidas / totalPartidas * 100;
+         return String.format("%.2f", resultado);
+    }
 }
 

@@ -10,6 +10,7 @@ public class RuletaGUI extends JFrame {
     private Jugador jugador;
 
     private JButton girarButton;
+    private JButton verEstadisticasButton;
     private JTextField montoApuestaField;
     private JComboBox<String> tipoApuestaComboBox;
     private JTextField numeroApuestaField;
@@ -17,6 +18,7 @@ public class RuletaGUI extends JFrame {
     private JLabel saldoLabel;
     private JLabel resultadoLabel;
     private JLabel casillaSalidaLabel;
+    private JLabel ruletaLabel;
 
     public RuletaGUI() {
         ruleta = new Ruleta();
@@ -40,6 +42,7 @@ public class RuletaGUI extends JFrame {
         saldoLabel = new JLabel("Saldo: $" + jugador.getSaldo());
         resultadoLabel = new JLabel("Resultado: ");
         casillaSalidaLabel = new JLabel("Casilla de Salida: "); // Etiqueta para mostrar la casilla
+        verEstadisticasButton = new JButton("Ver Estadísticas");
 
         montoApuestaField.setEnabled(false);
 
@@ -50,6 +53,14 @@ public class RuletaGUI extends JFrame {
         tipoApuestaComboBox.addItem("Apuesta Por Docena");
         tipoApuestaComboBox.addItem("Apuesta Falta");
         tipoApuestaComboBox.addItem("Apuesta Pasa");
+
+        verEstadisticasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Mostrar estadísticas en una ventana de diálogo
+                mostrarVentanaEstadisticas();
+            }
+        });
 
         tipoApuestaComboBox.addActionListener(new ActionListener() {
             @Override
@@ -167,6 +178,7 @@ public class RuletaGUI extends JFrame {
         panel.add(colorApuestaLabel);
         panel.add(colorApuestaComboBox);
         panel.add(girarButton);
+        panel.add(verEstadisticasButton);
 
         add(panel, BorderLayout.NORTH);
         add(saldoLabel, BorderLayout.WEST);
@@ -174,6 +186,32 @@ public class RuletaGUI extends JFrame {
         add(casillaSalidaLabel, BorderLayout.SOUTH);
     }
 
+    private void mostrarVentanaEstadisticas() {
+        // Crear un nuevo JFrame para mostrar las estadísticas
+        JFrame estadisticasFrame = new JFrame("Estadísticas del Jugador");
+        estadisticasFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        // Crear un JTextArea para mostrar las estadísticas
+        JTextArea estadisticasTextArea = new JTextArea();
+        estadisticasTextArea.setEditable(false);
+
+        // Obtener las estadísticas del jugador y mostrarlas en el JTextArea
+        estadisticasTextArea.append("Estadísticas del jugador " + "\n");
+        estadisticasTextArea.append("Ganancias totales: $" + jugador.getGananciasTotales() + "\n");
+        estadisticasTextArea.append("Porcentaje de partidas ganadas: " + jugador.getPorcentajePartidasGanadas() + "%\n");
+        estadisticasTextArea.append("Porcentaje de partidas perdidas: " + jugador.getPorcentajePartidasPerdidas() + "%\n");
+
+        // Agregar el JTextArea a un JScrollPane para permitir el desplazamiento
+        JScrollPane scrollPane = new JScrollPane(estadisticasTextArea);
+
+        // Agregar el JScrollPane al JFrame
+        estadisticasFrame.add(scrollPane);
+
+        // Establecer el tamaño y la ubicación de la ventana de estadísticas
+        estadisticasFrame.setSize(400, 300);
+        estadisticasFrame.setLocationRelativeTo(this);
+        estadisticasFrame.setVisible(true);
+    }
     private void setupInputValidations() {
         // Validación para el campo de monto
         montoApuestaField.addKeyListener(new KeyAdapter() {
