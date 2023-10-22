@@ -41,7 +41,10 @@ public class RuletaGUI extends JFrame {
         resultadoLabel = new JLabel("Resultado: ");
         casillaSalidaLabel = new JLabel("Casilla de Salida: "); // Etiqueta para mostrar la casilla
 
+        montoApuestaField.setEnabled(false);
+
         tipoApuestaComboBox = new JComboBox<>();
+        tipoApuestaComboBox.addItem("Selecciona tu tipo de apuesta");
         tipoApuestaComboBox.addItem("Apuesta Por Número");
         tipoApuestaComboBox.addItem("Apuesta Por Color");
         tipoApuestaComboBox.addItem("Apuesta Por Docena");
@@ -56,15 +59,23 @@ public class RuletaGUI extends JFrame {
                 numeroApuestaField.setText("");
                 colorApuestaComboBox.setSelectedIndex(0);
                 if (seleccion.equals("Apuesta Por Número")) {
+                    montoApuestaField.setEnabled(true);
                     numeroApuestaField.setEnabled(true);
                     colorApuestaComboBox.setEnabled(false);
                 } else if (seleccion.equals("Apuesta Por Color")) {
+                    montoApuestaField.setEnabled(true);
                     numeroApuestaField.setEnabled(false);
                     colorApuestaComboBox.setEnabled(true);
                 } else if (seleccion.equals("Apuesta Por Docena")) {
+                    montoApuestaField.setEnabled(true);
                     numeroApuestaField.setEnabled(true);
                     colorApuestaComboBox.setEnabled(false);
+                } else if (seleccion.equals("Apuesta Falta") || seleccion.equals("Apuesta Pasa")){
+                    montoApuestaField.setEnabled(true);
+                    numeroApuestaField.setEnabled(false);
+                    colorApuestaComboBox.setEnabled(false);
                 } else {
+                    montoApuestaField.setEnabled(false);
                     numeroApuestaField.setEnabled(false);
                     colorApuestaComboBox.setEnabled(false);
                 }
@@ -81,7 +92,9 @@ public class RuletaGUI extends JFrame {
                 // Verificar si el campo de monto está vacío
                 if (montoApuestaStr.isEmpty()) {
                     camposValidos = false;
-                    JOptionPane.showMessageDialog(null, "Ingrese el monto de la apuesta", "Error", JOptionPane.ERROR_MESSAGE);
+                    if (!tipoApuesta.equals("Selecciona tu tipo de apuesta")){
+                        JOptionPane.showMessageDialog(null, "Ingrese el monto de la apuesta", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
                     double montoApuesta = Double.parseDouble(montoApuestaStr);
                     if (montoApuesta > jugador.getSaldo()) {
@@ -91,7 +104,9 @@ public class RuletaGUI extends JFrame {
                 }
 
                 // Verificar campos adicionales según el tipo de apuesta
-                if (tipoApuesta.equals("Apuesta Por Número")) {
+                if (tipoApuesta.equals("Selecciona tu tipo de apuesta")) {
+                    JOptionPane.showMessageDialog(null, "No realizo ninguna apuesta!", "Error", JOptionPane.ERROR_MESSAGE);
+                } else if (tipoApuesta.equals("Apuesta Por Número")) {
                     String numeroApuestaStr = numeroApuestaField.getText();
                     if (numeroApuestaStr.isEmpty()) {
                         camposValidos = false;
