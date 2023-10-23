@@ -6,13 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="09097480-81f2-44c0-9a97-f07596a24fcc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Jugador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Jugador.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Ruleta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Ruleta.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/RuletaGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/RuletaGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Jugador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Jugador.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Ruleta.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Ruleta.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/RuletaGUI$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/RuletaGUI$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/RuletaGUI$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/RuletaGUI$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/RuletaGUI$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/RuletaGUI$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/RuletaGUI$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/RuletaGUI$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/RuletaGUI$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/RuletaGUI$5.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/RuletaGUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/RuletaGUI.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

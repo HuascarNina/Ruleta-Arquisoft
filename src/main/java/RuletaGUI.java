@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
+import javax.swing.ImageIcon;
+import java.net.URL;
 
 public class RuletaGUI extends JFrame {
     private Ruleta ruleta;
@@ -18,7 +20,8 @@ public class RuletaGUI extends JFrame {
     private JLabel saldoLabel;
     private JLabel resultadoLabel;
     private JLabel casillaSalidaLabel;
-    private JLabel ruletaLabel;
+    private JLabel ruletaImageLabel;
+    private JLabel mesaImageLabel;
 
     public RuletaGUI() {
         ruleta = new Ruleta();
@@ -43,6 +46,10 @@ public class RuletaGUI extends JFrame {
         resultadoLabel = new JLabel("Resultado: ");
         casillaSalidaLabel = new JLabel("Casilla de Salida: "); // Etiqueta para mostrar la casilla
         verEstadisticasButton = new JButton("Ver Estadísticas");
+
+
+        ruletaImageLabel = new JLabel(new ImageIcon("C:/Users/huasc/OneDrive/Escritorio/Ruleta-Arquisoft/img/fotoRuleta.png"));
+        mesaImageLabel = new JLabel(new ImageIcon("C:/Users/huasc/OneDrive/Escritorio/Ruleta-Arquisoft/img/fotoMesa.png"));
 
         montoApuestaField.setEnabled(false);
 
@@ -169,6 +176,10 @@ public class RuletaGUI extends JFrame {
         JLabel colorApuestaLabel = new JLabel("Color:");
 
         JPanel panel = new JPanel(new GridLayout(5, 2));
+        JPanel imagePanel = new JPanel();
+        imagePanel.setPreferredSize(new Dimension(1000,500));
+        imagePanel.add(ruletaImageLabel);
+        imagePanel.add(mesaImageLabel);
         panel.add(tipoApuestaLabel);
         panel.add(tipoApuestaComboBox);
         panel.add(montoLabel);
@@ -181,6 +192,7 @@ public class RuletaGUI extends JFrame {
         panel.add(verEstadisticasButton);
 
         add(panel, BorderLayout.NORTH);
+        add(imagePanel, BorderLayout.CENTER);
         add(saldoLabel, BorderLayout.WEST);
         add(resultadoLabel, BorderLayout.EAST);
         add(casillaSalidaLabel, BorderLayout.SOUTH);
